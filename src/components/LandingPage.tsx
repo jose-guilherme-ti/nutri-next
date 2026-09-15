@@ -1441,7 +1441,7 @@ export default function LandingPage() {
             }}
           >
             <span>
-              © 2026 Nutri Poliana. Dados e depoimentos desta demonstração são
+              © 2027 Nutri Poliana. Dados e depoimentos desta demonstração são
               fictícios.
             </span>
             <span>CRN 00000 • Salvador/BA</span>
