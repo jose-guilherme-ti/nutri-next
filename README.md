@@ -1,63 +1,54 @@
-# Nutri Poliana Campos — Next.js
+# Nutri Poliana Campos — Next.js + Material UI
 
-Landing page completa + sorteio de comentários do Instagram.
+Landing page + sorteio de comentários do Instagram.
 
-Stack:
+## Stack
 
 - **Next.js 15** (App Router) + TypeScript
-- **Storybook** — componentes `Sorteio` e `Counter`
+- **Material UI v6** (`@mui/material`) + Emotion + Roboto
+- **Storybook 10**
 - **Jest** + React Testing Library
-- **Cypress** — E2E
+- **Cypress**
 
 ## Setup
 
 ```bash
 npm install
-cp .env.example .env.local
+cp .env.example .env.local   # se existir
 npm run dev
 ```
 
-- Home / landing: http://localhost:3000  
-- Sorteio na landing: http://localhost:3000/?sorteio=true  
-- Página isolada do sorteio: http://localhost:3000/sorteio  
+| URL | Conteúdo |
+|-----|----------|
+| http://localhost:3000 | Landing completa |
+| http://localhost:3000/?sorteio=true | Landing + sorteio |
+| http://localhost:3000/sorteio | Só o sorteio (MUI) |
+
+## Material UI
+
+Pacotes instalados:
+
+```bash
+npm install @mui/material @emotion/react @emotion/styled
+npm install @fontsource/roboto
+npm install @mui/icons-material
+npm install @mui/material-nextjs   # integração App Router
+```
+
+- Tema customizado em `src/theme/theme.ts` (verde da marca)
+- Provider em `src/components/ThemeRegistry.tsx`
+- Componente `Sorteio` 100% MUI (Card, TextField, Button, Avatar, Chip, Alert…)
 
 ## Scripts
 
 | Comando | Descrição |
 |---------|-----------|
 | `npm run dev` | Next.js |
-| `npm run build` | Build de produção |
-| `npm run storybook` | Storybook (porta 6006) |
+| `npm run storybook` | Storybook |
 | `npm test` | Jest |
 | `npm run cypress` | Cypress UI |
-| `npm run cypress:run` | Cypress headless |
-| `npm run test:e2e` | Dev server + Cypress |
 
 ## Sorteio
 
-- Aparece na landing quando a URL tem `?sorteio=true`
-- Também em `/sorteio`
-- Remove automaticamente `nutripolianacampos` da lista
-- API: `NEXT_PUBLIC_API_URL` (padrão `https://nutri-back-two.vercel.app`)
-
-## Estrutura
-
-```
-src/
-  app/
-    page.tsx           # Landing completa
-    sorteio/page.tsx   # Sorteio isolado
-  components/
-    LandingPage.tsx
-    Sorteio.tsx
-    Counter.tsx
-    *.stories.tsx
-  styles/
-    landing.css
-  __tests__/
-cypress/e2e/
-.storybook/
-public/
-  Apresentacao.jpeg
-  Profissional.jpeg
-```
+- Remove `nutripolianacampos` automaticamente
+- API: `NEXT_PUBLIC_API_URL` ou `https://nutri-back-two.vercel.app`
