@@ -1,0 +1,236 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #262626;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  color: #262626;
+  margin-bottom: 8px;
+}
+
+.header p {
+  color: #8e8e8e;
+  font-size: 1.05rem;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+}
+
+.formGroup {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.formGroup input {
+  flex: 1;
+  padding: 14px 16px;
+  border: 1px solid #dbdbdb;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.formGroup input:focus {
+  border-color: #0095f6;
+}
+
+.btn {
+  padding: 14px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+}
+
+.btnPrimary {
+  background: #0095f6;
+  color: white;
+}
+
+.btnPrimary:hover:not(:disabled) {
+  background: #0077cc;
+}
+
+.btnPrimary:disabled {
+  background: #b2dffc;
+}
+
+.btnSuccess {
+  background: #00c853;
+  color: white;
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+}
+
+.btnSuccess:hover:not(:disabled) {
+  background: #00a844;
+}
+
+.btnSuccess:disabled {
+  background: #a5d6a7;
+}
+
+.error {
+  color: #ed4956;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #8e8e8e;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.stats h2 {
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.stats span {
+  background: #efefef;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.participantsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.participantCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 12px 8px;
+  border-radius: 12px;
+  background: #fafafa;
+  transition: transform 0.15s;
+}
+
+.participantCard:hover {
+  transform: translateY(-2px);
+  background: #f0f0f0;
+}
+
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #dbdbdb;
+  margin-bottom: 8px;
+  background: #efefef;
+}
+
+.avatarPlaceholder {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #dbdbdb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #8e8e8e;
+  margin-bottom: 8px;
+}
+
+.username {
+  font-size: 13px;
+  font-weight: 600;
+  color: #262626;
+  word-break: break-all;
+}
+
+.winnerBox {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.winnerBox h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #00c853;
+}
+
+.winnerAvatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #00c853;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+}
+
+.winnerUsername {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #262626;
+}
+
+.winnerName {
+  color: #8e8e8e;
+  margin-top: 4px;
+}
+
+.spinning {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.empty {
+  text-align: center;
+  color: #8e8e8e;
+  padding: 30px;
+}
