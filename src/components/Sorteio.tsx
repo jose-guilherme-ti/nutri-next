@@ -1,7 +1,20 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import styles from "./Sorteio.module.css";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
+import Avatar from "@mui/material/Avatar";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import CircularProgress from "@mui/material/CircularProgress";
+import SearchIcon from "@mui/icons-material/Search";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import InstagramIcon from "@mui/icons-material/Instagram";
 
 export type Participant = {
   username: string;
@@ -10,16 +23,14 @@ export type Participant = {
 };
 
 export type SorteioProps = {
-  /** URL base da API de comentários (sem trailing slash) */
   apiBaseUrl?: string;
-  /** Usuários que devem ser excluídos do sorteio (ex: dono do post) */
   excludedUsernames?: string[];
 };
 
 const DEFAULT_API =
-  typeof window !== "undefined" && window.location.hostname === "localhost"
-    ? "http://localhost:3001"
-    : "https://nutri-back-two.vercel.app";
+  typeof window !== "undefined"
+    ? "" // mesma origem → /api/comments
+    : "";
 
 export default function Sorteio({
   apiBaseUrl = DEFAULT_API,
@@ -89,144 +100,233 @@ export default function Sorteio({
   };
 
   return (
-    <div className={styles.container} data-testid="sorteio-container">
-      <div className={styles.header}>
-        <h1>Sorteio Instagram</h1>
-        <p>Cole o link do post e sorteie entre os comentários</p>
-      </div>
+    <Box
+      data-testid="sorteio-container"
+      sx={{
+        maxWidth: 800,
+        mx: "auto",
+        px: 2,
+        py: 5,
+      }}
+    >
+      <Stack spacing={1} alignItems="center" sx={{ mb: 4, textAlign: "center" }}>
+        <InstagramIcon color="primary" sx={{ fontSize: 40 }} />
+        <Typography variant="h4" component="h1" fontWeight={700}>
+          Sorteio Instagram
+        </Typography>
+        <Typography color="text.secondary">
+          Cole o link do post e sorteie entre os comentários
+        </Typography>
+      </Stack>
 
-      <div className={styles.card}>
-        <form onSubmit={handleScrape}>
-          <div className={styles.formGroup}>
-            <input
-              type="text"
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Box
+            component="form"
+            onSubmit={handleScrape}
+            sx={{
+              display: "flex",
+              gap: 1.5,
+              flexDirection: { xs: "column", sm: "row" },
+            }}
+          >
+            <TextField
+              fullWidth
+              size="medium"
               placeholder="https://www.instagram.com/p/..."
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               disabled={loading}
-              data-testid="url-input"
-              aria-label="URL do post do Instagram"
+              inputProps={{
+                "data-testid": "url-input",
+                "aria-label": "URL do post do Instagram",
+              }}
             />
-            <button
+            <Button
               type="submit"
-              className={`${styles.btn} ${styles.btnPrimary}`}
+              variant="contained"
+              color="primary"
               disabled={loading}
+              startIcon={
+                loading ? (
+                  <CircularProgress size={18} color="inherit" />
+                ) : (
+                  <SearchIcon />
+                )
+              }
               data-testid="buscar-btn"
+              sx={{ minWidth: 140, whiteSpace: "nowrap" }}
             >
               {loading ? "Buscando..." : "Buscar"}
-            </button>
-          </div>
-        </form>
+            </Button>
+          </Box>
 
-        {error && (
-          <p className={styles.error} data-testid="error-message">
-            {error}
-          </p>
-        )}
-        {loading && (
-          <p className={styles.loading} data-testid="loading">
-            Carregando comentários... isso pode levar alguns segundos
-          </p>
-        )}
-      </div>
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }} data-testid="error-message">
+              {error}
+            </Alert>
+          )}
+          {loading && (
+            <Alert severity="info" sx={{ mt: 2 }} data-testid="loading">
+              Carregando comentários... isso pode levar alguns segundos
+            </Alert>
+          )}
+        </CardContent>
+      </Card>
 
       {participants.length > 0 && (
-        <div className={styles.card} data-testid="participants-section">
-          <div className={styles.stats}>
-            <h2>Participantes</h2>
-            <span data-testid="participants-count">
-              {participants.length} únicos
-            </span>
-          </div>
+        <Card sx={{ mb: 3 }} data-testid="participants-section">
+          <CardContent>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{ mb: 2 }}
+            >
+              <Typography variant="h6" component="h2">
+                Participantes
+              </Typography>
+              <Chip
+                label={`${participants.length} únicos`}
+                color="primary"
+                variant="outlined"
+                data-testid="participants-count"
+              />
+            </Stack>
 
-          <div className={styles.participantsGrid}>
-            {participants.map((p) => (
-              <div
-                key={p.username}
-                className={styles.participantCard}
-                data-testid={`participant-${p.username}`}
-              >
-                {p.profilePic ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={p.profilePic}
-                    alt={p.username}
-                    className={styles.avatar}
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      target.style.display = "none";
-                      const next = target.nextElementSibling as HTMLElement | null;
-                      if (next) next.style.display = "flex";
-                    }}
-                  />
-                ) : null}
-                <div
-                  className={styles.avatarPlaceholder}
-                  style={{ display: p.profilePic ? "none" : "flex" }}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "repeat(2, 1fr)",
+                  sm: "repeat(3, 1fr)",
+                  md: "repeat(4, 1fr)",
+                },
+                gap: 2,
+                maxHeight: 400,
+                overflowY: "auto",
+              }}
+            >
+              {participants.map((p) => (
+                <Stack
+                  key={p.username}
+                  alignItems="center"
+                  spacing={1}
+                  data-testid={`participant-${p.username}`}
+                  sx={{
+                    p: 1.5,
+                    borderRadius: 2,
+                    bgcolor: "grey.50",
+                    height: "100%",
+                    transition: "transform 0.15s",
+                    "&:hover": {
+                      transform: "translateY(-2px)",
+                      bgcolor: "grey.100",
+                    },
+                  }}
                 >
-                  {p.username.charAt(0).toUpperCase()}
-                </div>
-                <span className={styles.username}>@{p.username}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+                  <Avatar
+                    src={p.profilePic || undefined}
+                    alt={p.username}
+                    sx={{ width: 56, height: 56 }}
+                  >
+                    {p.username.charAt(0).toUpperCase()}
+                  </Avatar>
+                  <Typography
+                    variant="body2"
+                    fontWeight={600}
+                    textAlign="center"
+                    sx={{ wordBreak: "break-all" }}
+                  >
+                    @{p.username}
+                  </Typography>
+                </Stack>
+              ))}
+            </Box>
+          </CardContent>
+        </Card>
       )}
 
       {participants.length > 0 && (
-        <div className={styles.card}>
-          <button
-            className={`${styles.btn} ${styles.btnSuccess}`}
-            onClick={handleRaffle}
-            disabled={spinning}
-            data-testid="sortear-btn"
-          >
-            {spinning ? "Sorteando..." : "Sortear Vencedor"}
-          </button>
+        <Card>
+          <CardContent>
+            <Button
+              fullWidth
+              variant="contained"
+              color="success"
+              size="large"
+              onClick={handleRaffle}
+              disabled={spinning}
+              startIcon={
+                spinning ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  <EmojiEventsIcon />
+                )
+              }
+              data-testid="sortear-btn"
+              sx={{ py: 1.5, fontSize: "1rem" }}
+            >
+              {spinning ? "Sorteando..." : "Sortear Vencedor"}
+            </Button>
 
-          {spinning && (
-            <div className={`${styles.winnerBox} ${styles.spinning}`}>
-              <p>Escolhendo o vencedor...</p>
-            </div>
-          )}
+            {spinning && (
+              <Box sx={{ textAlign: "center", py: 3 }}>
+                <Typography color="text.secondary">
+                  Escolhendo o vencedor...
+                </Typography>
+              </Box>
+            )}
 
-          {winner && !spinning && (
-            <div className={styles.winnerBox} data-testid="winner-box">
-              <h2>🎉 Temos um vencedor!</h2>
-              {winner.profilePic ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={winner.profilePic}
+            {winner && !spinning && (
+              <Box data-testid="winner-box" sx={{ textAlign: "center", py: 3 }}>
+                <Typography
+                  variant="h5"
+                  color="success.main"
+                  fontWeight={700}
+                  gutterBottom
+                >
+                  Temos um vencedor!
+                </Typography>
+                <Avatar
+                  src={winner.profilePic || undefined}
                   alt={winner.username}
-                  className={styles.winnerAvatar}
-                />
-              ) : (
-                <div
-                  className={styles.avatarPlaceholder}
-                  style={{
+                  sx={{
                     width: 100,
                     height: 100,
+                    mx: "auto",
+                    mb: 2,
+                    border: 4,
+                    borderColor: "success.main",
+                    boxShadow: "0 4px 15px rgba(0, 200, 83, 0.3)",
                     fontSize: 40,
-                    margin: "0 auto 16px",
                   }}
                 >
                   {winner.username.charAt(0).toUpperCase()}
-                </div>
-              )}
-              <div className={styles.winnerUsername}>@{winner.username}</div>
-              {winner.fullName && (
-                <div className={styles.winnerName}>{winner.fullName}</div>
-              )}
-            </div>
-          )}
-        </div>
+                </Avatar>
+                <Typography variant="h5" fontWeight={700}>
+                  @{winner.username}
+                </Typography>
+                {winner.fullName && (
+                  <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+                    {winner.fullName}
+                  </Typography>
+                )}
+              </Box>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {!loading && participants.length === 0 && !error && (
-        <div className={`${styles.card} ${styles.empty}`}>
-          <p>Cole a URL de um post do Instagram para começar</p>
-        </div>
+        <Card>
+          <CardContent>
+            <Typography color="text.secondary" textAlign="center" sx={{ py: 2 }}>
+              Cole a URL de um post do Instagram para começar
+            </Typography>
+          </CardContent>
+        </Card>
       )}
-    </div>
+    </Box>
   );
 }

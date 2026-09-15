@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display } from "next/font/google";
+import ThemeRegistry from "@/components/ThemeRegistry";
 import "./globals.css";
 
+// Fontes da landing (Playfair + DM Sans)
 const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -31,7 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${dmSans.variable} ${playfair.variable}`}>
-      <body className={dmSans.className}>{children}</body>
+      <body className={dmSans.className}>
+        <ThemeRegistry>{children}</ThemeRegistry>
+      </body>
     </html>
   );
 }
